@@ -55,7 +55,6 @@ object Users {
   }
 
   def update(id: Long, newUser: UserCommon) = {
-    val oldUser = find(id)
     DB.withConnection { implicit c =>
       SQL("""UPDATE user
           set username = {username}, firstname = {firstname}, lastname = {lastname}

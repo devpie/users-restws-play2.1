@@ -6,13 +6,14 @@ import models._
 import org.codehaus.jackson.JsonNode
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import scala.xml._
 
 object Application extends Controller {
   implicit val readsUser = Json.reads[JsonUser]
   implicit val writesUser = Json.writes[User]
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index("Play 2.1 REST WS example"))
   }
 
   def list = Action {
@@ -44,7 +45,7 @@ object Application extends Controller {
   def updateUser(id: Long) = Action(parse.json) { request =>
     Json.fromJson[JsonUser](request.body) match {
       case JsSuccess(u, _) => Users.update(id, u) map { cu => Ok(Json.toJson(cu)) } getOrElse { Status(500) }
-      case _ => Status(500)
+      case JsError(e) => Status(500)(e.toString())
     }
   }
 
